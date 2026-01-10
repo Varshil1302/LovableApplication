@@ -1,6 +1,7 @@
 package com.example.demo.dto.member;
 
-import com.codingshuttle.projects.lovable_clone.enums.ProjectRole;
+
+import com.example.demo.enums.ProjectRole;
 
 public record InviteMemberRequest(
         String email,
