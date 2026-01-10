@@ -1,7 +1,7 @@
 package com.example.demo.dto.auth;
 
 public record UserProfileResponse(
-        Long id,
+        Long userId,
         String email,
         String name,
         String avatarUrl

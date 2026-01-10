@@ -1,6 +1,8 @@
 package com.example.demo.dto.member;
 
-import com.codingshuttle.projects.lovable_clone.enums.ProjectRole;
+
+
+import com.example.demo.enums.ProjectRole;
 
 import java.time.Instant;
 
