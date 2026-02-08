@@ -5,6 +5,7 @@ import com.example.demo.dto.member.MemberResponse;
 import com.example.demo.dto.member.UpdateMemberRoleRequest;
 import com.example.demo.entity.ProjectMember;
 import com.example.demo.service.ProjectMemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,8 @@ public class ProjectMemberController
 
     @GetMapping
     public ResponseEntity<List<MemberResponse>> getProjectMembers(@PathVariable("id") Long projectId) {
-        Long userId = 1L;
-        return ResponseEntity.ok(projectMemberService.getProjectMembers(projectId, userId));
+
+        return ResponseEntity.ok(projectMemberService.getProjectMembers(projectId));
     }
 
     @PostMapping
@@ -31,9 +32,9 @@ public class ProjectMemberController
             @PathVariable("id") Long projectId,
             @RequestBody InviteMemberRequest request
     ) {
-        Long userId = 1L;
+
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                projectMemberService.inviteMember(projectId, request, userId)
+                projectMemberService.inviteMember(projectId, request)
         );
     }
 
@@ -41,10 +42,10 @@ public class ProjectMemberController
     public ResponseEntity<MemberResponse> updateMemberRole(
             @PathVariable("id") Long projectId,
             @PathVariable Long memberId,
-            @RequestBody UpdateMemberRoleRequest request
+            @RequestBody @Valid UpdateMemberRoleRequest request
     ) {
-        Long userId = 1L;
-        return ResponseEntity.ok(projectMemberService.updateMemberRole(projectId, memberId, request, userId));
+
+        return ResponseEntity.ok(projectMemberService.updateMemberRole(projectId, memberId, request));
     }
 
     @DeleteMapping("/{memberId}")
@@ -52,8 +53,8 @@ public class ProjectMemberController
             @PathVariable("id") Long projectId,
             @PathVariable Long memberId
     ) {
-        Long userId = 1L;
-        projectMemberService.deleteProjectMember(projectId, memberId, userId);
+
+        projectMemberService.deleteProjectMember(projectId, memberId);
         return ResponseEntity.noContent().build();
     }
 

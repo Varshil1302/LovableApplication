@@ -26,10 +26,6 @@ public class Project
     @Column(name = "project_name",nullable = false)
     String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_fk",referencedColumnName = "userId")
-    User owner;
-
     Boolean isPublic=false;
 
     @CreationTimestamp
