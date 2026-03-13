@@ -18,6 +18,7 @@ import com.example.demo.service.ProjectService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -45,10 +46,12 @@ public class ProjectServiceImp implements ProjectService
     }
 
     @Override
+    @PreAuthorize("@security.canViewProject(#id)")
     public ProjectResponse getProjectDetailsById(Long id)
     {
         Long userId=jwtService.getCurrentUser();
-        Project project=projectRepository.findProjectByUserIdAndProjectId(userId,id).orElseThrow(()->new ResourceNotFoundException("User with Id: "+userId+" is not member of this project "+id));
+        Project project=projectRepository.findProjectByUserIdAndProjectId(userId,id)
+                .orElseThrow(()->new ResourceNotFoundException("User with Id: "+userId+" is not member of this project "+id));
         return projectMapper.toProjectResponse(project);
     }
 
@@ -77,6 +80,7 @@ public class ProjectServiceImp implements ProjectService
     }
 
     @Override
+    @PreAuthorize("@security.canEditProject(#id)")
     public ProjectResponse updateProject(Long id, ProjectRequest request)
     {
         Long userId=jwtService.getCurrentUser();
@@ -93,6 +97,7 @@ public class ProjectServiceImp implements ProjectService
     }
 
     @Override
+    @PreAuthorize("@security.canDeleteProject(#id)")
     public void softDelete(Long id)
     {
         Long userId=jwtService.getCurrentUser();

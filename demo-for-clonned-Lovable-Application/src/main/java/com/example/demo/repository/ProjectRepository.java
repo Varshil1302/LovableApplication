@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 
 import com.example.demo.entity.Project;
+import com.example.demo.enums.ProjectRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,7 +26,8 @@ public interface ProjectRepository extends JpaRepository<Project,Long>
 
     @Query("""
             select p from Project p 
-            where p.deletedAt is NULL 
+            where p.id = :projectId
+             AND p.deletedAt is NULL 
             AND EXISTS(
               SELECT 1 FROM ProjectMember pm
               WHERE pm.id.userId= :userId
