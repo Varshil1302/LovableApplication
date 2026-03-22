@@ -1,15 +1,22 @@
 package com.example.demo.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Plan
 {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
     String stripePriceId;
