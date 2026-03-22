@@ -18,6 +18,7 @@ import com.example.demo.service.ProjectMemberService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -36,6 +37,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService
     JwtService jwtService;
 
     @Override
+    @PreAuthorize("@security.canViewMembersProject(#projectId)")
     public List<MemberResponse> getProjectMembers(Long projectId)
     {
         Long userId=jwtService.getCurrentUser();
@@ -48,6 +50,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService
     }
 
     @Override
+    @PreAuthorize("@security.canManageMembersProject(#projectId)")
     public MemberResponse inviteMember(Long projectId, InviteMemberRequest request)
     {
         Long userId=jwtService.getCurrentUser();

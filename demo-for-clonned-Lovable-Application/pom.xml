@@ -74,6 +74,13 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+        <!-- Source: https://mvnrepository.com/artifact/com.stripe/stripe-java -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>31.4.1</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
