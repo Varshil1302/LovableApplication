@@ -55,4 +55,9 @@ public class JwtAuthFilter extends OncePerRequestFilter
             handlerExceptionResolver.resolveException(request,response,null,e);
         }
     }
+
+    @Override
+    protected boolean shouldNotFilterAsyncDispatch() {
+        return true;
+    }
 }

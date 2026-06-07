@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.project.FileContentResponse;
 import com.example.demo.dto.project.FileNode;
-import com.example.demo.service.FileService;
+import com.example.demo.service.ProjectFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilesController
 {
-    private final FileService fileService;
+    private final ProjectFileService projectFileService;
 
     @GetMapping
     public ResponseEntity<List<FileNode>> getFileTree(@PathVariable Long projectId) {
         Long userId = 1L;
-        return ResponseEntity.ok(fileService.getFileTree(projectId, userId));
+        return ResponseEntity.ok(projectFileService.getFileTree(projectId, userId));
     }
 
     @GetMapping("/{*path}") // /src/hooks/get-user-hook.jsx
@@ -31,7 +31,7 @@ public class FilesController
             @PathVariable String path
     ) {
         Long userId = 1L;
-        return ResponseEntity.ok(fileService.getFileContent(projectId, path, userId));
+        return ResponseEntity.ok(projectFileService.getFileContent(projectId, path, userId));
     }
 
 

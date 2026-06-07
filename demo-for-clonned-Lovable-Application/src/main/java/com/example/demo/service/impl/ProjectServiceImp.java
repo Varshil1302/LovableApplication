@@ -71,7 +71,9 @@ public class ProjectServiceImp implements ProjectService
         ProjectMemberId projectMemberId=new ProjectMemberId(project.getId(),userId);
         ProjectMember projectMember=ProjectMember.builder()
                                       .id(projectMemberId)
-                                      .project(project).user(user).projectRole(ProjectRole.OWNER)
+                                      .project(project)
+                                      .user(user)
+                                      .projectRole(ProjectRole.OWNER)
                                       .invitedAt(Instant.now())
                                       .acceptedAt(Instant.now())
                                       .build();

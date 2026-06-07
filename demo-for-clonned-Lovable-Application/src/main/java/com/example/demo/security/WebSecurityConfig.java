@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import jakarta.servlet.DispatcherType;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,6 +33,7 @@ public class WebSecurityConfig
                  .csrf(csrfConfig->csrfConfig.disable())
                  .sessionManagement(sessionConfig->sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                  .authorizeHttpRequests(auth->auth
+                         .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
                          .requestMatchers("/api/auth/**","/webhooks/**").permitAll()
                          .requestMatchers("/api/projects/**").authenticated()
                          .anyRequest().authenticated()

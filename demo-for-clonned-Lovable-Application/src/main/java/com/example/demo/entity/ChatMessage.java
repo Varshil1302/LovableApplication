@@ -21,9 +21,10 @@ public class ChatMessage
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumns({
-            @JoinColumn(name = "project_id",referencedColumnName = "id",nullable = false),
-            @JoinColumn(name = "user_id",referencedColumnName = "userId",nullable = false)
+            @JoinColumn(name = "project_id",referencedColumnName = "project_id",nullable = false),
+            @JoinColumn(name = "user_id",referencedColumnName = "user_id",nullable = false)
     })
     ChatSession chatSession;
 
