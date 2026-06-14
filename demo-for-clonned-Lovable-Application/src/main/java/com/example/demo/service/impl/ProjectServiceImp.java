@@ -15,6 +15,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.ProjectRepository;
 import com.example.demo.security.JwtService;
 import com.example.demo.service.ProjectService;
+import com.example.demo.service.ProjectTemplateService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,6 +37,7 @@ public class ProjectServiceImp implements ProjectService
     MemberResponseRepository memberResponseRepository;
     ProjectMapper projectMapper;
     JwtService jwtService;
+    ProjectTemplateService projectTemplateService;
 
     @Override
     public List<ProjectSummaryResponse> getUserProjects()
@@ -78,6 +80,7 @@ public class ProjectServiceImp implements ProjectService
                                       .acceptedAt(Instant.now())
                                       .build();
         memberResponseRepository.save(projectMember);
+        projectTemplateService.initializeProjectFromTemplate(project.getId());
         return projectMapper.toProjectResponse(project);
     }
 

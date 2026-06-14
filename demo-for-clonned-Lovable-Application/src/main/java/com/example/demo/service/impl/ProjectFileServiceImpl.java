@@ -9,6 +9,8 @@ import com.example.demo.mapper.ProjectFileMapper;
 import com.example.demo.repository.ProjectFileRepository;
 import com.example.demo.repository.ProjectRepository;
 import com.example.demo.service.ProjectFileService;
+import com.example.demo.service.ProjectTemplateService;
+import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class ProjectFileServiceImpl implements ProjectFileService
 
     @Value("${minio.project-bucket}")
     private String projectBucket;
+    private static final String BUCKET_NAME = "lovable";
 
     @Override
     public List<FileNode> getFileTree(Long projectId, Long userId)
@@ -46,8 +49,22 @@ public class ProjectFileServiceImpl implements ProjectFileService
     }
 
     @Override
-    public FileContentResponse getFileContent(Long projectId, String path, Long userId) {
-        return null;
+    public FileContentResponse getFileContent(Long projectId, String path) {
+
+        String objectName = projectId + "/" + path;
+        try (
+                InputStream is = minioClient.getObject(
+                        GetObjectArgs.builder()
+                                .bucket(BUCKET_NAME)
+                                .object(objectName)
+                                .build())) {
+
+            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            return new FileContentResponse(path, content);
+        } catch (Exception e) {
+            log.error("Failed to read file: {}/{}", projectId, path, e);
+            throw new RuntimeException("Failed to read file content", e);
+        }
     }
 
     @Override
