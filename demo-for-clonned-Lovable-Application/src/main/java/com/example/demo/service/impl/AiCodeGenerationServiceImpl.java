@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.llm.PromptUtils;
 import com.example.demo.llm.advisors.FileTreeContextAdvisor;
+import com.example.demo.llm.tools.CodeGenerationTools;
 import com.example.demo.security.JwtService;
 import com.example.demo.service.AiCodeGenerationService;
 import com.example.demo.service.ProjectFileService;
@@ -37,11 +38,14 @@ public class AiCodeGenerationServiceImpl implements AiCodeGenerationService
 
         Map<String,Object> advisorParams = Map.of("userId",userId,"projectId",projectId);
 
+        CodeGenerationTools codeGenerationTools = new CodeGenerationTools(projectFileService,projectId);
+
         StringBuilder fullResponse = new StringBuilder();
 
         return chatClient.prompt()
                 .system(PromptUtils.SYSTEM_Prompt)
                 .user(message)
+                .tools(codeGenerationTools)
                 .advisors(advisorSpec->{
                     advisorSpec.params(advisorParams);
                     advisorSpec.advisors(fileTreeContextAdvisor);
