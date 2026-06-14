@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.llm.PromptUtils;
+import com.example.demo.llm.advisors.FileTreeContextAdvisor;
 import com.example.demo.security.JwtService;
 import com.example.demo.service.AiCodeGenerationService;
 import com.example.demo.service.ProjectFileService;
@@ -24,6 +25,7 @@ public class AiCodeGenerationServiceImpl implements AiCodeGenerationService
     private final ChatClient chatClient;
     private final JwtService jwtService;
     private final ProjectFileService projectFileService;
+    private final FileTreeContextAdvisor fileTreeContextAdvisor;
 
     private static final Pattern FILE_TAG_PATTERN = Pattern.compile("<file path=\"([^\"]+)\">(.*?)</file>",Pattern.DOTALL);
 
@@ -42,6 +44,7 @@ public class AiCodeGenerationServiceImpl implements AiCodeGenerationService
                 .user(message)
                 .advisors(advisorSpec->{
                     advisorSpec.params(advisorParams);
+                    advisorSpec.advisors(fileTreeContextAdvisor);
                 })
                 .stream()
                 .chatResponse()
