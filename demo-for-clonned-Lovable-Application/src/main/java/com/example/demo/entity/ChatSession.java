@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,6 +16,8 @@ import java.time.Instant;
 @Table(name = "chat_sessions")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+//@ToString
 public class ChatSession
 {
     @EmbeddedId
