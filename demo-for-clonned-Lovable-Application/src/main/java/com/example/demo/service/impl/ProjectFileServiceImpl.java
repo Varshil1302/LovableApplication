@@ -45,7 +45,13 @@ public class ProjectFileServiceImpl implements ProjectFileService
     {
 
         List<ProjectFile> projectFiles=projectFileRepository.findByProjectId(projectId);
-        return projectFileMapper.getFromProjectFile(projectFiles);
+        for(ProjectFile projectFile:projectFiles)
+        {
+            log.info("Project Files Are::{}",projectFile.getPath());
+        }
+        return projectFiles.stream()
+                .map(projectFile->new FileNode(projectFile.getPath()))
+                .toList();
     }
 
     @Override
@@ -73,6 +79,8 @@ public class ProjectFileServiceImpl implements ProjectFileService
 
         String cleanPath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
         String objectKey = projectId + "/" + cleanPath;
+        log.info("File Path is::{}",filePath);
+        log.info("File Contents are ::{}",fileContent);
 
         try {
             byte[] contentBytes = fileContent.getBytes(StandardCharsets.UTF_8);

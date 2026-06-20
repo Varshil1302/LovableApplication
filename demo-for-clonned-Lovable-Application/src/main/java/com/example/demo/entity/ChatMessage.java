@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,6 +16,7 @@ import java.time.Instant;
 @Table(name = "chat_message")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ChatMessage
 {
     @Id
@@ -35,6 +37,9 @@ public class ChatMessage
     @Column(nullable = false)
     MessageRole role;
 
+    @OneToMany(mappedBy = "chatMessage",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OrderBy("sequenceOrder ASC")
+    List<ChatEvent> chatEventList;
 
     Integer tokenUsed=0;
 
