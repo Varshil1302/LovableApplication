@@ -80,7 +80,7 @@ public class AiCodeGenerationServiceImpl implements AiCodeGenerationService
                 .doOnComplete(
                         ()->{
                             Schedulers.boundedElastic().schedule(()->{
-                                long duration = endTime.get()-startTime.get();
+                                long duration = (endTime.get()-startTime.get())/1000;
                                 finalizeChats(message,chatSession,fullResponse.toString(),duration);
                             });
                         })
@@ -123,7 +123,7 @@ public class AiCodeGenerationServiceImpl implements AiCodeGenerationService
                                     .chatEventType(ChatEventType.THOUGHT)
                                     .chatMessage(assistantchatMessage)
                                     .sequenceOrder(0)
-                                    .content("Thought For "+duration+"s")
+                                    .content("Thought For "+duration+" sec.")
                                     .build());
 
         chatEventList.stream()

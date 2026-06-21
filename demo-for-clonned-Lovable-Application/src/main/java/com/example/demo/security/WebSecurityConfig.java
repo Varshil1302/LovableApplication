@@ -34,7 +34,8 @@ public class WebSecurityConfig
                  .sessionManagement(sessionConfig->sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                  .authorizeHttpRequests(auth->auth
                          .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
-                         .requestMatchers("/api/auth/**","/webhooks/**").permitAll()
+                         .requestMatchers("/api/auth/**","/webhooks/**","/swagger-ui/**","/swagger-ui.html",
+                                 "/v3/api-docs/**").permitAll()
                          .requestMatchers("/api/projects/**").authenticated()
                          .anyRequest().authenticated()
                  )
