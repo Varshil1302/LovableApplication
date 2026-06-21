@@ -1,0 +1,442 @@
+{
+  "info": {
+    "_postman_id": "db67e65c-791d-4361-be98-bd7481cb6cd2",
+    "name": "Lovable Application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39994180"
+  },
+  "item": [
+    {
+      "name": "Create Project",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\":\"Java Project\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/projects",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "projects"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "fetchProject",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/projects/8",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "projects",
+            "8"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Project",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Update Project",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\":\"Project 5\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/projects/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "projects",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Project",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/projects/4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "projects",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Invite Member",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\":\"amit.p@gmail.com\",\r\n    \"role\":\"VIEWER\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/projects/2/members",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "projects",
+            "2",
+            "members"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Member of projects",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\":\"sumit.k@gmail.com\",\r\n    \"role\":\"EDITOR\"\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/projects/2/members",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "projects",
+            "2",
+            "members"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Member Role",
+      "request": {
+        "method": "PATCH",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Member Request",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/projects/2/members/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "projects",
+            "2",
+            "members",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login Request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const res=pm.response.json();\r",
+              "pm.environment.set(\"token\",res.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\":\"ankit.s@gmail.com\",\r\n    \"password\":\"abd\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SignUp Request",
+      "request": {
+        "method": "POST",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "create SessionUrl",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "openCustomerPortal",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/stripe/portal",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "stripe",
+            "portal"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tool Calling",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "what is the weather of London?",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/chat",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "chat"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Chat Message",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"projectId\" : 1,\r\n    \"message\" : \"Create a calculator App.\"\r\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/chat/stream",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "chat",
+            "stream"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get FileContent",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/files/2/src/components/Calculator.tsx",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "files",
+            "2",
+            "src",
+            "components",
+            "Calculator.tsx"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}
