@@ -22,7 +22,7 @@ public interface MemberResponseRepository extends JpaRepository<ProjectMember, P
      List<ProjectMember> findAllProjctMemberById(Long projectId);
 
     @Query("""
-           SELECT pm.projectRole from ProjectMember pm
+           SELECT pm.role from ProjectMember pm
             where pm.id.userId= :userId AND pm.id.projectId= :projectId 
             """)
     Optional<ProjectRole> findRoleByUserIdAndProjectId(@Param("userId") Long userId,

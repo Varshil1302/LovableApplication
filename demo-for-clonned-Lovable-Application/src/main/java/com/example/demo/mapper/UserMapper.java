@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper
 {
     @Mapping(target = "passwordHash",source = "password")
+    @Mapping(target = "email",source = "username")
    User toEntity(SignupRequest signupRequest);
 
     //@Mapping(target = "",source = "")

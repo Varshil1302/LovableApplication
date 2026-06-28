@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.chat.ChatRequest;
 import com.example.demo.dto.chat.ChatResponse;
+import com.example.demo.dto.chat.StreamResponse;
 import com.example.demo.service.AiCodeGenerationService;
 import com.example.demo.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -15,16 +16,17 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/chat")
 public class ChatController
 {
     private final AiCodeGenerationService aiCodeGenerationService;
     private final ChatService chatService;
 
-    @PostMapping(path = "/api/chat/stream",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ServerSentEvent<String>> streamChat(@RequestBody ChatRequest chatRequest){
+    @PostMapping(path = "/stream",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<StreamResponse>> streamChat(@RequestBody ChatRequest chatRequest){
         return aiCodeGenerationService
                 .streamResponse(chatRequest.message(),chatRequest.projectId())
-                .map(data-> ServerSentEvent.<String>builder()
+                .map(data-> ServerSentEvent.<StreamResponse>builder()
                         .data(data)
                         .build());
     }

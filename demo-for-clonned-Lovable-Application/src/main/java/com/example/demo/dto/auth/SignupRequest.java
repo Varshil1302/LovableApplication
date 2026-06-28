@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record SignupRequest(
-        @NotNull @Email String email,
+        @NotNull @Email String username,
         String name,
         @Size(min = 4,max = 18,message = "Password Should be within 4 to 18.")  String password
 ) {

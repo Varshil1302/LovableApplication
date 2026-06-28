@@ -30,7 +30,7 @@ public class ProjectMember
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    ProjectRole projectRole;
+    ProjectRole role;
 
     Instant invitedAt;
     Instant acceptedAt;

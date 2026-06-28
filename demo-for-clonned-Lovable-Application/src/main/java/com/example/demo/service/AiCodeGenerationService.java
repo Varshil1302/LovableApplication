@@ -1,8 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.chat.StreamResponse;
 import reactor.core.publisher.Flux;
 
 public interface AiCodeGenerationService
 {
-    Flux<String> streamResponse(String message,Long projectId);
+    Flux<StreamResponse> streamResponse(String message, Long projectId);
 }

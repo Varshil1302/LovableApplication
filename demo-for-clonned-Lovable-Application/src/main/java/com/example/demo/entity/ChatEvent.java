@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import com.example.demo.enums.ChatEventType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

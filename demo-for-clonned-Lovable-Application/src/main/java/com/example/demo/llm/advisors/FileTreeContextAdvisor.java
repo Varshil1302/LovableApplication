@@ -44,7 +44,7 @@ public class FileTreeContextAdvisor implements StreamAdvisor
 
         List<Message> userMessage = incomingMessage.stream().filter(m->m.getMessageType()!=MessageType.SYSTEM).toList();
 
-        List<FileNode> fileTrees = projectFileService.getFileTree(projectId,userId);
+        List<FileNode> fileTrees = projectFileService.getFileTree(projectId,userId).files();
         String fileTreeContext = "\n\n ---- FILE_TREE ----\n"+fileTrees.toString();
 
 

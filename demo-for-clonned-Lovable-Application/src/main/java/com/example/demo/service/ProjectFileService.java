@@ -2,13 +2,14 @@ package com.example.demo.service;
 
 import com.example.demo.dto.project.FileContentResponse;
 import com.example.demo.dto.project.FileNode;
+import com.example.demo.dto.project.FileNodeResponse;
 
 import java.util.List;
 
 public interface ProjectFileService
 {
 
-     List<FileNode> getFileTree(Long projectId, Long userId);
+     FileNodeResponse getFileTree(Long projectId, Long userId);
 
      FileContentResponse getFileContent(Long projectId, String path);
 
