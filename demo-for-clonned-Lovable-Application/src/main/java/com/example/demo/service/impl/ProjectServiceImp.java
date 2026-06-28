@@ -56,12 +56,9 @@ public class ProjectServiceImp implements ProjectService
     public ProjectSummaryResponse getProjectDetailsById(Long id)
     {
         Long userId=jwtService.getCurrentUser();
-        log.info("dsfassadasca");
         var projectRole=projectRepository.findAccessibleProjectByIdWithRole(id,userId).orElseThrow(()->new BadRequestException(""));
-        log.info("safasfwfqw");
         log.info("Role of user:: "+projectRole.getUserrole());
-        log.info("dsfsd"+projectRole.getProject().getName());
-        //return new ProjectSummaryResponse(Long.valueOf("0"),"aaa",ProjectRole.OWNER, Instant.now(),Instant.now());
+        log.info("Name Of The Project::"+projectRole.getProject().getName());
         return projectMapper.toProjectSummaryResponse(projectRole.getProject(),projectRole.getUserrole());
     }
 
