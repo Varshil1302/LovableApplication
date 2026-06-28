@@ -12,13 +12,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface MemberResponseMapper
 {
-    @Mapping(source = "projectRole",target = "role")
+    @Mapping(source = "role",target = "role")
     @Mapping(source = "user.userId",target = "userId")
     @Mapping(source = "user.name",target = "name")
     @Mapping(source = "user.email",target = "email")
     MemberResponse toMemberResponse(ProjectMember projectMember);
 
-    @Mapping(source = "projectRole",target = "role")
+    @Mapping(source = "role",target = "role")
     @Mapping(source = "user.userId",target = "userId")
     @Mapping(source = "user.name",target = "name")
     @Mapping(source = "user.email",target = "email")

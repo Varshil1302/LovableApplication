@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.project.FileContentResponse;
 import com.example.demo.dto.project.FileNode;
+import com.example.demo.dto.project.FileNodeResponse;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.ProjectFile;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -41,7 +42,7 @@ public class ProjectFileServiceImpl implements ProjectFileService
     private static final String BUCKET_NAME = "lovable";
 
     @Override
-    public List<FileNode> getFileTree(Long projectId, Long userId)
+    public FileNodeResponse getFileTree(Long projectId, Long userId)
     {
 
         List<ProjectFile> projectFiles=projectFileRepository.findByProjectId(projectId);
@@ -49,9 +50,10 @@ public class ProjectFileServiceImpl implements ProjectFileService
         {
             log.info("Project Files Are::{}",projectFile.getPath());
         }
-        return projectFiles.stream()
+        List<FileNode> files=projectFiles.stream()
                 .map(projectFile->new FileNode(projectFile.getPath()))
                 .toList();
+        return new FileNodeResponse(files);
     }
 
     @Override

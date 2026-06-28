@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.chat.StreamResponse;
 import com.example.demo.entity.*;
 import com.example.demo.enums.ChatEventType;
 import com.example.demo.enums.MessageRole;
@@ -15,6 +16,7 @@ import com.example.demo.service.ProjectFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
@@ -46,12 +48,13 @@ public class AiCodeGenerationServiceImpl implements AiCodeGenerationService
     private static final Pattern FILE_TAG_PATTERN = Pattern.compile("<file path=\"([^\"]+)\">(.*?)</file>",Pattern.DOTALL);
 
     @Override
-    public Flux<String> streamResponse(String message, Long projectId) {
+    public Flux<StreamResponse> streamResponse(String message, Long projectId) {
         Long userId = jwtService.getCurrentUser();
 
         ChatSession chatSession = createChatSessionIfNotExists(projectId,userId);
         AtomicReference<Long> startTime = new AtomicReference<>(System.currentTimeMillis());
         AtomicReference<Long> endTime = new AtomicReference<>(0L);
+        AtomicReference<Usage> usages = new AtomicReference<>();
 
         Map<String,Object> advisorParams = Map.of("userId",userId,"projectId",projectId);
 
@@ -81,7 +84,7 @@ public class AiCodeGenerationServiceImpl implements AiCodeGenerationService
                         ()->{
                             Schedulers.boundedElastic().schedule(()->{
                                 long duration = (endTime.get()-startTime.get())/1000;
-                                finalizeChats(message,chatSession,fullResponse.toString(),duration);
+                                finalizeChats(message,chatSession,fullResponse.toString(),duration,usages.get());
                             });
                         })
                 .doOnError(error->log.error("Error during streaming for projectId: {}",projectId))
@@ -91,13 +94,13 @@ public class AiCodeGenerationServiceImpl implements AiCodeGenerationService
                     var text   = output != null ? output.getText() : null;
 
                     if (text != null && !text.isEmpty()) {
-                        sink.next(text);
+                        sink.next(new StreamResponse(text));
                     }
                     // else: ignore non-text events
                 });
     }
 
-    private void finalizeChats(String userMessage ,  ChatSession chatSession, String fullText,Long duration)
+    private void finalizeChats(String userMessage , ChatSession chatSession, String fullText, Long duration, Usage usage)
     {
            //Save the User Message.
            chatMessageRepository.save(

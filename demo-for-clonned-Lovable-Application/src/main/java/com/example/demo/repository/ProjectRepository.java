@@ -13,16 +13,14 @@ import java.util.Optional;
 public interface ProjectRepository extends JpaRepository<Project,Long>
 {
     @Query("""
-            select p from Project p 
-            where p.deletedAt is NULL 
-            AND EXISTS(
-              SELECT 1 FROM ProjectMember pm
-              WHERE pm.id.userId= :userId
-              AND pm.id.projectId=p.id
-            )
+            select p as project,pm.role as userrole
+            from Project p JOIN ProjectMember pm 
+            ON p.id=pm.project.id
+            where pm.user.userId = :userId
+            AND p.deletedAt is NULL 
             ORDER BY p.updatedAt DESC
             """)
-    List<Project> findAllByUserId(@Param("userId") Long userId);
+    List<ProjectWithRole> findAllByUserId(@Param("userId") Long userId);
 
     @Query("""
             select p from Project p 
@@ -37,4 +35,22 @@ public interface ProjectRepository extends JpaRepository<Project,Long>
             """)
     Optional<Project> findProjectByUserIdAndProjectId(@Param("userId") Long userId,
                                                       @Param("projectId") Long projectId) ;
+   @Query("""
+           select p as project, pm.role as userrole from Project p
+           JOIN ProjectMember pm 
+           ON p.id=pm.project.id 
+           where p.id= :projectId
+           AND pm.user.userId= :userId
+           AND p.deletedAt IS NULL
+           """)
+   Optional<ProjectWithRole> findAccessibleProjectByIdWithRole(
+           @Param("projectId") Long projectId,
+           @Param("userId") Long userId
+   );
+
+   interface  ProjectWithRole
+   {
+       Project getProject();
+       ProjectRole getUserrole();
+   }
 }

@@ -31,9 +31,9 @@ public class AuthServiceImp implements AuthService
     @Override
     public AuthResponse login(LoginRequestBody loginRequest)
     {
-        boolean isExists=userRepository.existsByEmail(loginRequest.email());
+        boolean isExists=userRepository.existsByEmail(loginRequest.username());
         if(!isExists) throw new BadRequestException("User is not exsits now...");
-        User user=userRepository.findByEmail(loginRequest.email()).orElse(null);
+        User user=userRepository.findByEmail(loginRequest.username()).orElse(null);
         boolean isPassMatch= BCrypt.checkpw(loginRequest.password(),user.getPasswordHash());
         if(!isPassMatch) throw  new BadRequestException("Password mismatch");
         String jwtToken=jwtService.generateJWT(user);
@@ -43,7 +43,7 @@ public class AuthServiceImp implements AuthService
     @Override
     public UserProfileResponse signup(SignupRequest signupRequest)
     {
-        userRepository.findByEmail(signupRequest.email()).ifPresent(user->{
+        userRepository.findByEmail(signupRequest.username()).ifPresent(user->{
            throw new BadRequestException("User is already exists");
         });
         User user=userMapper.toEntity(signupRequest);

@@ -12,7 +12,7 @@ public record ChatResponse(
         ChatSession chatSession,
         String content,
         MessageRole role,
-        List<ChatEvent> chatEventList,
+        List<ChatEventResponse> chatEventList,
         Integer tokenUsed,
         Instant createdAt
 ) {

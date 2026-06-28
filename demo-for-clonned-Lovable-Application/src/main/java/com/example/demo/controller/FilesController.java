@@ -2,19 +2,17 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.project.FileContentResponse;
 import com.example.demo.dto.project.FileNode;
+import com.example.demo.dto.project.FileNodeResponse;
 import com.example.demo.security.JwtService;
 import com.example.demo.service.ProjectFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/files")
+@RequestMapping("/api/projects/{projectId}/files")
 @RequiredArgsConstructor
 public class FilesController
 {
@@ -22,15 +20,15 @@ public class FilesController
     private final JwtService jwtService;
 
     @GetMapping
-    public ResponseEntity<List<FileNode>> getFileTree(@PathVariable Long projectId) {
+    public ResponseEntity<FileNodeResponse> getFileTree(@PathVariable Long projectId) {
         Long userId = jwtService.getCurrentUser();
         return ResponseEntity.ok(projectFileService.getFileTree(projectId, userId));
     }
 
-    @GetMapping("{projectId}/{*path}") // /src/hooks/get-user-hook.jsx
+    @GetMapping("/content") // /src/hooks/get-user-hook.jsx
     public ResponseEntity<FileContentResponse> getFile(
             @PathVariable Long projectId,
-            @PathVariable String path
+            @RequestParam String path
     ) {
         Long userId = jwtService.getCurrentUser();
         return ResponseEntity.ok(projectFileService.getFileContent(projectId, path));

@@ -8,6 +8,7 @@ import com.example.demo.entity.ProjectMember;
 import com.example.demo.entity.ProjectMemberId;
 import com.example.demo.entity.User;
 import com.example.demo.enums.ProjectRole;
+import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.mapper.ProjectMapper;
 import com.example.demo.repository.MemberResponseRepository;
@@ -19,16 +20,19 @@ import com.example.demo.service.ProjectTemplateService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
 @FieldDefaults(makeFinal = true,level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@Slf4j
 public class ProjectServiceImp implements ProjectService
 {
 
@@ -43,18 +47,22 @@ public class ProjectServiceImp implements ProjectService
     public List<ProjectSummaryResponse> getUserProjects()
     {
         Long userId=jwtService.getCurrentUser();
-        List<Project> projectList=projectRepository.findAllByUserId(userId);
-        return projectMapper.toProjectSummury(projectList);
+        List<ProjectRepository.ProjectWithRole> projectList=projectRepository.findAllByUserId(userId);
+        return projectList.stream().map(pwr->projectMapper.toProjectSummaryResponse(pwr.getProject(),pwr.getUserrole())).toList();
     }
 
     @Override
     @PreAuthorize("@security.canViewProject(#id)")
-    public ProjectResponse getProjectDetailsById(Long id)
+    public ProjectSummaryResponse getProjectDetailsById(Long id)
     {
         Long userId=jwtService.getCurrentUser();
-        Project project=projectRepository.findProjectByUserIdAndProjectId(userId,id)
-                .orElseThrow(()->new ResourceNotFoundException("User with Id: "+userId+" is not member of this project "+id));
-        return projectMapper.toProjectResponse(project);
+        log.info("dsfassadasca");
+        var projectRole=projectRepository.findAccessibleProjectByIdWithRole(id,userId).orElseThrow(()->new BadRequestException(""));
+        log.info("safasfwfqw");
+        log.info("Role of user:: "+projectRole.getUserrole());
+        log.info("dsfsd"+projectRole.getProject().getName());
+        //return new ProjectSummaryResponse(Long.valueOf("0"),"aaa",ProjectRole.OWNER, Instant.now(),Instant.now());
+        return projectMapper.toProjectSummaryResponse(projectRole.getProject(),projectRole.getUserrole());
     }
 
     @Override
@@ -75,7 +83,7 @@ public class ProjectServiceImp implements ProjectService
                                       .id(projectMemberId)
                                       .project(project)
                                       .user(user)
-                                      .projectRole(ProjectRole.OWNER)
+                                      .role(ProjectRole.OWNER)
                                       .invitedAt(Instant.now())
                                       .acceptedAt(Instant.now())
                                       .build();
@@ -92,7 +100,7 @@ public class ProjectServiceImp implements ProjectService
         Project project=projectRepository.findById(id).orElseThrow();
         ProjectMemberId projectMemberId=new ProjectMemberId(project.getId(),userId);
         ProjectMember projectMember=memberResponseRepository.findById(projectMemberId).orElseThrow(()->new ResourceNotFoundException("No Such Records Are Available"));
-        if(projectMember.getProjectRole().equals(ProjectRole.VIEWER))
+        if(projectMember.getRole().equals(ProjectRole.VIEWER))
         {
             throw new RuntimeException("Not Allowed To Update");
         }
@@ -109,7 +117,7 @@ public class ProjectServiceImp implements ProjectService
         Project project=projectRepository.findById(id).orElseThrow();
         ProjectMemberId projectMemberId=new ProjectMemberId(project.getId(),userId);
         ProjectMember projectMember=memberResponseRepository.findById(projectMemberId).orElseThrow(()->new ResourceNotFoundException("No Such Records Are Available"));
-        if(projectMember.getProjectRole().equals(ProjectRole.VIEWER))
+        if(projectMember.getRole().equals(ProjectRole.VIEWER))
         {
             throw new RuntimeException("Not Allowed To Delete");
         }

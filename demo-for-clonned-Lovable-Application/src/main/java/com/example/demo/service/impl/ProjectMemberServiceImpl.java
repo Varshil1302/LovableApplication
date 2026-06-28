@@ -55,10 +55,10 @@ public class ProjectMemberServiceImpl implements ProjectMemberService
     {
         Long userId=jwtService.getCurrentUser();
         Project project= projectRepository.findProjectByUserIdAndProjectId(userId,projectId).orElseThrow(()->new RuntimeException("dsvdsfadscas"));
-        User invitee= userRepository.findByEmail(request.email()).orElseThrow(()->new RuntimeException("dsvdsfadscas"));
+        User invitee= userRepository.findByEmail(request.username()).orElseThrow(()->new RuntimeException("dsvdsfadscas"));
         ProjectMemberId projectMemberId1=new ProjectMemberId(project.getId(),userId);
         ProjectMember projectMember1=memberResponseRepository.findById(projectMemberId1).orElseThrow(()->new ResourceNotFoundException("No Such Records Are Available"));
-        if(!projectMember1.getProjectRole().equals(ProjectRole.OWNER))
+        if(!projectMember1.getRole().equals(ProjectRole.OWNER))
         {
             throw new RuntimeException("Owner should not be invitee");
         }
@@ -70,7 +70,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService
                                      .id(projectMemberId)
                                      .user(invitee)
                                      .project(project)
-                                     .projectRole(request.role())
+                                     .role(request.role())
                                      .invitedAt(Instant.now())
                                      .build();
         memberResponseRepository.save(projectMember);
@@ -87,7 +87,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService
             throw new RuntimeException("Member is not part of this project...");
         }
         ProjectMember updatableMember=projectMemberList.stream().filter(pm->pm.getId().getUserId()==memberId).findAny().get();
-        updatableMember.setProjectRole(ProjectRole.VIEWER);
+        updatableMember.setRole(ProjectRole.VIEWER);
         memberResponseRepository.save(updatableMember);
         return memberResponseMapper.toMemberResponse(updatableMember);
     }
