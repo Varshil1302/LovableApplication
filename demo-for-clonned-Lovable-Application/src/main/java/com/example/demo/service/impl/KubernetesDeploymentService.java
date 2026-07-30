@@ -9,6 +9,7 @@ import io.fabric8.kubernetes.client.dsl.ExecListener;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class KubernetesDeploymentService implements DeployementService {
 
     private final KubernetesClient kubernetesConfig;
+    private final StringRedisTemplate redisTemplate;
 
     private final String NAMESPACE= "lovable-app";
     private final String POOL_LABEL= "status";
@@ -38,6 +40,7 @@ public class KubernetesDeploymentService implements DeployementService {
         Pod pod = findActivePod(projectId);
         if(pod!=null)
         {
+            registerRoute(domain,pod);
             return new DeployementResponse("http://"+domain+":"+REVERSE_PROXY_PORT);
         }
         return claimAndStartNewPod(projectId,domain);
@@ -80,6 +83,7 @@ public class KubernetesDeploymentService implements DeployementService {
 
             log.info("Starting dev server for project {}...", projectId);
             execCommand(podName,RUNNER_CONTAINER,"sh","-c",startCmd);
+            registerRoute(domain,pod);
 
             log.info("Deployment successful: http://{}:{}",domain,REVERSE_PROXY_PORT);
             return new DeployementResponse("http://"+domain+":"+REVERSE_PROXY_PORT);
@@ -93,6 +97,13 @@ public class KubernetesDeploymentService implements DeployementService {
 
 
 
+    }
+
+    private void registerRoute(String domain,Pod pod)
+    {
+        String podIP = pod.getStatus().getPodIP();
+        if(podIP==null) throw new RuntimeException("Pod is not available...");
+        redisTemplate.opsForValue().set("route:"+domain,podIP+":5173",6,TimeUnit.HOURS);
     }
 
 
